@@ -8,14 +8,41 @@ document.addEventListener('click',function(e){
 
    if(e.target.dataset.btn){
 
-      selectItem(e.target.dataset.btn)
+      // selectItem(e.target.dataset.btn)
+
+      addItemOnCart(e.target.dataset.btn)
 
    }if(e.target.dataset.remove){
 
-      identifyRemoveItem(e.target.dataset.remove)   
+      // identifyRemoveItem(e.target.dataset.remove)   
+
+      removeItemFromCart(e.target.dataset.remove)
    }
 })
 
+function addItemOnCart(targetIdItem) {
+   const targetItem = findItemOnMenu(targetIdItem) // option 1
+
+   cart.push(targetItem)
+   renderCart(cart)
+}
+
+function removeItemFromCart(removedIdItem) {
+   const targetItem = cart.find(cartItem => cartItem.id == removedIdItem) // option 2
+   const itemIndex  = cart.indexOf(targetItem)
+
+   /* Delete gera um buraco vazio no meio do array, o que pode causar alguns erros */
+   // delete cart[itemIndex]
+
+   cart.splice(itemIndex, 1)
+
+   renderCart(cart)
+}
+
+function findItemOnMenu(itemId) {
+   // menuItem é um nome aleatorio, coloquei menuItem porque é um item dentro do menuArray
+   return menuArray.find(menuItem => menuItem.id == itemId)
+}
 
 //**This function will select the whole object that matched the id clicked and store it inside the variable targetItem. Originally we are storaging an array but to make it into an object we will include the [0] at the end, since this array will Always hold only 1 item.
 function selectItem(dishId){
@@ -47,19 +74,26 @@ function calculatePrice(cart){
    let prices = cart.map(function(product){
        return product.price
    })
+
+   if (prices.length == 0) {
+      return 0
+   }
    
    const sumPrices = prices.reduce(function (accumulator,currentPrice) {
       return accumulator + currentPrice   
    })
 
    // console.log(sumPrices)
-   renderCart(sumPrices)
+   // renderCart(sumPrices)
+
+   return sumPrices
    
 }
 
 
-function renderCart(sumPrices){
-   let htmlItens = getHtmlFromCart(cart)
+function renderCart(cart){
+   const htmlItens = getHtmlFromCart(cart)
+   const sumPrices = calculatePrice(cart)
    
    let html = ""
     html = `
@@ -95,8 +129,7 @@ function getHtmlFromCart(cart){
             ${product.name} 
             <button class="remove-btn" id="remove-btn" data-remove ="${product.id}">remove</button>
          </div>
-         <span>${product.price}</span>
-         <br>
+         <div>${product.price}</div>
       </div>
       `
    })
