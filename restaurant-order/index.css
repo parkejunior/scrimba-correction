@@ -29,7 +29,7 @@ h2{
 
 .phone{
   width: 600px;
-  height: 1161px;
+  min-height: 1161px;
   background-color: white;
   margin: auto;
 }
@@ -78,7 +78,7 @@ h2{
 
 .order{
   width: 508px;
-  height: 319px;
+  min-height: 319px;
   /* border: 2px solid red; */
   margin: auto;
   margin-top: 45px;
